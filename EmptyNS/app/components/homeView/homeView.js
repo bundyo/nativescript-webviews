@@ -3,7 +3,23 @@ var isInit = true,
     helpers = require('../../utils/widgets/helper'),
     navigationProperty = require('../../utils/widgets/navigation-property'),
     // additional requires
-    viewModel = require('./homeView-view-model');
+	frameModule = require('ui/frame'),
+	pageModule = require("ui/page"),
+	webViewModule = require("ui/web-view"),
+	stackLayoutModule = require("ui/layouts/stack-layout"),
+    viewModel = require('./homeView-view-model'),
+    addresses = [ 'http://www.google.com', 'http://www.telerik.com' ];
+
+var factoryFunc = function (page) {
+	page.content = new stackLayoutModule.StackLayout();
+	for (var i = 0; i < 2; i++) {
+		var webView = new webViewModule.WebView();
+		webView.url = addresses[i];
+		webView.webContentsDebuggingEnabled = true;
+	    page.content.addChild(webView);
+	}
+    return page;
+};
 
 // additional functions
 function pageLoaded(args) {
@@ -18,6 +34,8 @@ function pageLoaded(args) {
 
         // additional pageInit
     }
+	
+	factoryFunc(page);
 }
 
 // START_CUSTOM_CODE_homeView
